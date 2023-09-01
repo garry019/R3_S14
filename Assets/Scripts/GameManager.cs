@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 {
     GameObject playerObject;
     PlayerStats playerStats;
+    GameObject directionalLight;
+    Light dl;
     GameObject pollutionSlider;
     GameObject[] trashCanIcons;
     GameObject forestAreaIcon;
@@ -18,6 +20,9 @@ public class GameManager : MonoBehaviour
     public Slider slider;
 
     [SerializeField] public AudioSource ambient;
+    [SerializeField] public AudioSource notifications;
+    [SerializeField] public Material day;
+    [SerializeField] public Material night;
     [SerializeField] private TextMeshProUGUI trashScore;
     [SerializeField] private TextMeshProUGUI pollutionScore;
     [SerializeField] private TextMeshProUGUI MissionText;
@@ -30,14 +35,13 @@ public class GameManager : MonoBehaviour
     public bool canTakeOldTrees;
     public int treesCollected;
     public int treesSown;
-    
-
     public bool canSow;
+    public bool trashDrop;
 
-    private void Start()
+    private void Awake()
     {
-        Cursor.visible = false;
-        onPollution = true;
+        directionalLight = GameObject.Find("Directional Light");
+        dl = directionalLight.GetComponent<Light>();
         playerObject = GameObject.Find("Player");
         playerStats = playerObject.GetComponent<PlayerStats>();
         pollutionSlider = GameObject.Find("Slider");
@@ -45,9 +49,15 @@ public class GameManager : MonoBehaviour
         sowArea1Icon = GameObject.Find("SowArea1");
         sowArea2Icon = GameObject.Find("SowArea2");
         credits = GameObject.Find("CreditsCanvas");
-        //canvasUI = GameObject.Find("Canvas");
         trashCanIcons = GameObject.FindGameObjectsWithTag("TrashCanIcon");
         slider = pollutionSlider.GetComponent<Slider>();
+        //canvasUI = GameObject.Find("Canvas");
+    }
+
+    private void Start()
+    {
+        Cursor.visible = false;
+        onPollution = true;
         treesCollected = 0;
     }
 
@@ -73,18 +83,13 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (slider.value == 0)
+        if (slider.value == 0 )
         {
-            canReforest = true;
-            canTakeOldTrees = true;
-            MissionText.text = "Ve a la zona de reforestación y tala los arboles muertos.";
-            ScoreGoal.text = "/9";
-            trashCanIcons = GameObject.FindGameObjectsWithTag("TrashCanIcon");
-            foreach (GameObject icon in trashCanIcons)
+            if (trashDrop)
             {
-                icon.GetComponent<MeshRenderer>().enabled = false;
+                trashDrop = false;
+                TrashDrop();
             }
-            forestAreaIcon.GetComponent<MeshRenderer>().enabled = true;
         }
         else
         {
@@ -111,7 +116,24 @@ public class GameManager : MonoBehaviour
             //credits.GetComponent<Canvas>().enabled = true;
             //canvasUI.GetComponent<Canvas>().enabled = false;
             retoFinalMissions = true;
+            RenderSettings.skybox = night;
+            dl.intensity = 0.25f;
         }
+    }
+
+    private void TrashDrop()
+    {
+        notifications.Play();
+        canReforest = true;
+        canTakeOldTrees = true;
+        MissionText.text = "Ve a la zona de reforestación y tala los arboles muertos.";
+        ScoreGoal.text = "/9";
+        trashCanIcons = GameObject.FindGameObjectsWithTag("TrashCanIcon");
+        foreach (GameObject icon in trashCanIcons)
+        {
+            icon.GetComponent<MeshRenderer>().enabled = false;
+        }
+        forestAreaIcon.GetComponent<MeshRenderer>().enabled = true;
     }
 
     public void OnPollution()
@@ -135,12 +157,13 @@ public class GameManager : MonoBehaviour
         {
             slider.value -= 0.1f;
         }
-
-        if (RenderSettings.fogDensity > 0)//Decrease Fog
+        else if(slider.value == 0)
         {
-            RenderSettings.fogDensity -= 0.0001f;
+            if (RenderSettings.fogDensity > 0)//Decrease Fog
+            {
+                RenderSettings.fogDensity -= 0.0001f;
+            }
         }
-
         playerStats.LifeRestore();
     }
 }

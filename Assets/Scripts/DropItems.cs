@@ -6,8 +6,6 @@ public class DropItems : MonoBehaviour
 {
     GameObject gmObject;
     GameManager gameManager;
-    GameObject notification;
-    AudioSource notificationSound;
     private bool canDrop;
 
     // Start is called before the first frame update
@@ -15,8 +13,6 @@ public class DropItems : MonoBehaviour
     {
         gmObject = GameObject.Find("GameManager");
         gameManager = gmObject.GetComponent<GameManager>();
-        notification = GameObject.Find("Notification");
-        notificationSound = notification.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -46,6 +42,6 @@ public class DropItems : MonoBehaviour
     {
         gameManager.onPollution = false;
         gameManager.score = 0;
-        notificationSound.Play();
+        gameManager.trashDrop = true;
     }
 }

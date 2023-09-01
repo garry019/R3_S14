@@ -34637,6 +34637,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98b6f40612be1ed428692ea226916db8, type: 3}
+--- !u!82 &906915431 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 7800686479552952090, guid: b9bf6bf02daee824da16f2a053c0387d, type: 3}
+  m_PrefabInstance: {fileID: 7800686478490495682}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &907754174
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38363,18 +38368,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slider: {fileID: 0}
   ambient: {fileID: 303237130}
+  notifications: {fileID: 906915431}
+  day: {fileID: 2100000, guid: dc49788c8ad11b241b459ce980a33f3d, type: 2}
+  night: {fileID: 2100000, guid: 8b4285a1d2adcc0459bc62fa1091464b, type: 2}
   trashScore: {fileID: 409223820}
   pollutionScore: {fileID: 1856887985}
   MissionText: {fileID: 644225668}
   ScoreGoal: {fileID: 729559466}
-  sliderValue: 80
   score: 0
   retoFinalMissions: 0
+  onPollution: 0
   canReforest: 0
   canTakeOldTrees: 0
   treesCollected: 0
   treesSown: 0
   canSow: 0
+  trashDrop: 0
 --- !u!4 &1004042795
 Transform:
   m_ObjectHideFlags: 0
